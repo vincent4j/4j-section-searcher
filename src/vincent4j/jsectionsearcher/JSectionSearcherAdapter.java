@@ -26,31 +26,6 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 	private ArrayList<ItemEntity> mItems;
 	private ArrayList<IndexEntity> mIndexes;
 	
-	public class IndexEntity {
-		public String index;
-		public int fromPosition;
-		public int toPosition;
-		
-		@Override
-		public String toString() {
-			return "IndexEntity [index=" + index + ", fromPosition="
-					+ fromPosition + ", toPosition=" + toPosition + "]";
-		}
-		
-		
-	}
-	
-	public class ItemEntity {
-		public IndexEntity index;
-		public JSectionSearcherItemEntity item;
-		@Override
-		public String toString() {
-			return "ItemEntity [index=" + index + ", item=" + item + "]";
-		}
-		
-		
-	}
-	
     /**
      * Item的布局类型，实例化时传入
      * 	0，默认；
@@ -166,7 +141,7 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 	
 	
 	private int getLayoutResourceId() {
-		int resourceId = android.R.layout.simple_list_item_1;
+		int resourceId = R.layout.j_section_searcher_item_default;
 		
 		/*
 		 * 当需要新增其他Item布局类型时，在此新增对应的switch分支。
@@ -207,7 +182,7 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
         switch (mLayoutType) {
 		case LAYOUT_TYPE_DEFAULT:
 			try {
-				((TextView) view).setText(mItems.get(position).item.getContent());
+				bindViewDefault(view, position);
 			} catch (ClassCastException e) {
 				Log.e(TAG, "You must supply a resource ID for a TextView");
 	            throw new IllegalStateException(
@@ -222,6 +197,21 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 		}
 
         return view;
+	}
+	
+	private void bindViewDefault(View view, int position) {
+		TextView sectionView = (TextView) view.findViewById(R.id.j_section_searcher_item_default_0);
+		
+		if (isSectionVisibility(position)) {
+			sectionView.setVisibility(View.VISIBLE);
+			sectionView.setText(mItems.get(position).index.index);
+		}
+		
+		((TextView) view.findViewById(R.id.j_section_searcher_item_default_1)).setText(mItems.get(position).item.getContent());
+	}
+	
+	private boolean isSectionVisibility(int position) {
+		return position == mItems.get(position).index.fromPosition;
 	}
 
 	@Override
@@ -238,6 +228,33 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 	@Override
 	public int getSectionForPosition(int position) {
 		return 0;
+	}
+	
+	public class IndexEntity {
+		
+		public String index;
+		public int fromPosition;
+		public int toPosition;
+		
+		@Override
+		public String toString() {
+			return "IndexEntity [index=" + index + ", fromPosition="
+					+ fromPosition + ", toPosition=" + toPosition + "]";
+		}
+		
+		
+	}
+	
+	public class ItemEntity {
+		
+		public IndexEntity index;
+		public JSectionSearcherItemEntity item;
+		
+		@Override
+		public String toString() {
+			return "ItemEntity [index=" + index + ", item=" + item + "]";
+		}
+		
 	}
 
 }

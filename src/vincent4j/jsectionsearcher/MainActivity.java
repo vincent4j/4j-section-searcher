@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
 //		    	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
 //		    	"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 //		    	"U", "V", "W", "X", "Y", "Z",
-				 "A", "C", "z",
+				 "A","O", "X","z",
 		    };
 		
 		 mSectionEntity = new ArrayList<JSectionSearcherSectionEntity>();
