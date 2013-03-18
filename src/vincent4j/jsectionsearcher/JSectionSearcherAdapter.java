@@ -1,9 +1,6 @@
 package vincent4j.jsectionsearcher;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.util.Log;
@@ -19,8 +16,40 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 	private static final String TAG = "JSectionSearcher";
 	
 	private Context mContext;
-	private List<? extends Map<String, ?>> mData;
+	
+	/**
+	 * Original data, initialized when construct method called.
+	 */
+	private ArrayList<JSectionSearcherSectionEntity> mOriginalData;
 	private LayoutInflater mInflater;
+	
+	private ArrayList<ItemEntity> mItems;
+	private ArrayList<IndexEntity> mIndexes;
+	
+	public class IndexEntity {
+		public String index;
+		public int fromPosition;
+		public int toPosition;
+		
+		@Override
+		public String toString() {
+			return "IndexEntity [index=" + index + ", fromPosition="
+					+ fromPosition + ", toPosition=" + toPosition + "]";
+		}
+		
+		
+	}
+	
+	public class ItemEntity {
+		public IndexEntity index;
+		public JSectionSearcherItemEntity item;
+		@Override
+		public String toString() {
+			return "ItemEntity [index=" + index + ", item=" + item + "]";
+		}
+		
+		
+	}
 	
     /**
      * Item的布局类型，实例化时传入
@@ -36,71 +65,100 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
     /**
      * 右边快速检索栏的索引
      */
-    private final static String [] SECTION_INDEX = {
+    private final static String [] INDEXES_CONTAINER = {
     	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
     	"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
     	"U", "V", "W", "X", "Y", "Z"
     };
     
-    /**
-     * 快速检索实体
-     */
-    private ArrayList<SearcherIndexEntity> mSearcherIndex;
-    
-    private class SearcherIndexEntity {
-    	String content; // 快速检索显示文字
-    	int fromPosition; // Section对应的开始Postion
-    	int toPosition; // Section对应的结束Position
+    public JSectionSearcherItemEntity getItemSelected() {
+    	return null;
     }
     
-    /**
-     * 实际填充数据实体
-     */
-    private ArrayList<SearcherItemEntity> mSearcherItem;
-    
-    /**
-     * 实际填充数据实体
-     */
-    public class SearcherItemEntity {
-    	String contentStr01;
-    	String contentStr02;
-    }
-    
-    
-    public JSectionSearcherAdapter(Context context, List<Map<String, List<SearcherItemEntity>>> data) {
+    public JSectionSearcherAdapter(Context context, ArrayList<JSectionSearcherSectionEntity> data) {
     	this(context, LAYOUT_TYPE_DEFAULT, data);
     }
 	
-	public JSectionSearcherAdapter(Context context, int layoutType, List<Map<String, List<SearcherItemEntity>>> data) {
+	public JSectionSearcherAdapter(Context context, int layoutType, ArrayList<JSectionSearcherSectionEntity> data) {
 		mContext = context;
 		mLayoutType = layoutType;
-		mData = data;
-		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mOriginalData = data;
+		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		initData(data);
+		initData(mOriginalData);
 	}
 	
-	private void initData(List<Map<String, List<SearcherItemEntity>>> data) {
+	private void initData(ArrayList<JSectionSearcherSectionEntity> data) {
 		if (data == null) {
 			return;
 		}
 		
-		mSearcherItem = new ArrayList<SearcherItemEntity>();
-		mSearcherIndex = new ArrayList<SearcherIndexEntity>();
-		SearcherIndexEntity searcherIndex = null;
-		int searcherIndexPosition = 0; // 快速检索工具条的位置
+		mItems = new ArrayList<ItemEntity>();
+		mIndexes = initIndexes();
+		
+		int indexIndex = 0;
+		int itemPosition = 0;
 		
 		for (int i = 0; i < data.size(); i++) {
+			System.out.println(" data.size() " + i);
 			
+			JSectionSearcherSectionEntity sectionEntity = data.get(i);
 			
-			Map<String, List<SearcherItemEntity>> sectionData = data.get(i);
+			System.out.println("sectionEntity " + sectionEntity);
 			
-			String searcherIndexContent = null;
+			if (sectionEntity == null) {
+				continue;
+			}
 			
-//			for (int j = 0; j < array.length; j++) {
-//				
-//			}
+			String index = sectionEntity.getIndex();
+			
+			System.out.println("sectionEntity.getIndex() " + index);
+			
+			IndexEntity indexEntity = mIndexes.get(indexIndex);
+			
+			System.out.println("indexEntity " + indexEntity);
+			
+			if (indexEntity.index.equalsIgnoreCase(index)) {
+				ArrayList<JSectionSearcherItemEntity> sectionItems = sectionEntity.getItems();
+				
+				if (sectionItems == null) {
+					continue;
+				}
+				
+				int sectionItemsSize = sectionItems.size();
+				
+				indexEntity.fromPosition = itemPosition;
+				indexEntity.toPosition = itemPosition + sectionItemsSize -1;
+				itemPosition = indexEntity.toPosition + 1;
+				
+				for (int j = 0; j < sectionItemsSize; j++) {
+					ItemEntity itemEntity = new ItemEntity();
+					itemEntity.index = indexEntity;
+					itemEntity.item = sectionItems.get(j);
+					mItems.add(itemEntity);
+				}
+				
+				indexIndex++;
+			}
 		}
+		
+	}
+	
+	private ArrayList<IndexEntity> initIndexes() {
+		ArrayList<IndexEntity> ret = new ArrayList<IndexEntity>();
+		
+		for (int i = 0; i < INDEXES_CONTAINER.length; i++) {
+			String index = INDEXES_CONTAINER[i];
+			
+			IndexEntity indexEntity = new IndexEntity();
+			indexEntity.index = index;
+			indexEntity.fromPosition = -1;
+			indexEntity.toPosition = -1;
+			
+			ret.add(indexEntity);
+		}
+		
+		return ret;
 	}
 	
 	
@@ -120,20 +178,17 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return mItems.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
-		return null;
+		return mItems.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
-		return 0;
+		return position;
 	}
 
 	@Override
@@ -149,7 +204,7 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
         switch (mLayoutType) {
 		case LAYOUT_TYPE_DEFAULT:
 			try {
-				((TextView) view).setText("");
+				((TextView) view).setText(mItems.get(position).item.getContent());
 			} catch (ClassCastException e) {
 				Log.e(TAG, "You must supply a resource ID for a TextView");
 	            throw new IllegalStateException(
