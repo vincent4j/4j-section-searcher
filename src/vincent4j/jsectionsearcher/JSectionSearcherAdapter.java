@@ -118,28 +118,31 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 			
 			System.out.println("indexEntity " + indexEntity);
 			
-			if (indexEntity.index.equalsIgnoreCase(index)) {
-				ArrayList<JSectionSearcherItemEntity> sectionItems = sectionEntity.getItems();
-				
-				if (sectionItems == null) {
-					continue;
-				}
-				
-				int sectionItemsSize = sectionItems.size();
-				
-				indexEntity.fromPosition = itemPosition;
-				indexEntity.toPosition = itemPosition + sectionItemsSize -1;
-				itemPosition = indexEntity.toPosition + 1;
-				
-				for (int j = 0; j < sectionItemsSize; j++) {
-					ItemEntity itemEntity = new ItemEntity();
-					itemEntity.index = indexEntity;
-					itemEntity.item = sectionItems.get(j);
-					mItems.add(itemEntity);
-				}
-				
+			while (!indexEntity.index.equalsIgnoreCase(index)) {
 				indexIndex++;
+				indexEntity = mIndexes.get(indexIndex);
 			}
+			
+			ArrayList<JSectionSearcherItemEntity> sectionItems = sectionEntity.getItems();
+			
+			if (sectionItems == null) {
+				continue;
+			}
+			
+			int sectionItemsSize = sectionItems.size();
+			
+			indexEntity.fromPosition = itemPosition;
+			indexEntity.toPosition = itemPosition + sectionItemsSize -1;
+			itemPosition = indexEntity.toPosition + 1;
+			
+			for (int j = 0; j < sectionItemsSize; j++) {
+				ItemEntity itemEntity = new ItemEntity();
+				itemEntity.index = indexEntity;
+				itemEntity.item = sectionItems.get(j);
+				mItems.add(itemEntity);
+			}
+			
+			indexIndex++;
 		}
 		
 	}
