@@ -63,6 +63,10 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 		initData(mOriginalData);
 	}
 	
+	public ArrayList<IndexEntity> getIndexes() {
+		return mIndexes;
+	}
+	
 	private void initData(ArrayList<JSectionSearcherSectionEntity> data) {
 		if (data == null) {
 			return;
@@ -224,7 +228,11 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 
 	@Override
 	public int getPositionForSection(int section) {
-		return 0;
+		if (section >= mIndexes.size()) {
+			return mIndexes.size() - 1;
+		}
+		
+		return mIndexes.get(section).fromPosition;
 	}
 
 	@Override

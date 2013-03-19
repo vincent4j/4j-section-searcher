@@ -6,7 +6,18 @@
     <ListView
         android:id="@+id/j_section_searcher_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent" 
+        android:scrollbars="none"
+        >
     </ListView>
+    
+    <vincent4j.jsectionsearcher.JSectionSearcherSideBar 
+        android:id="@+id/j_section_searcher_side"
+        android:layout_width="36dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true" 
+        android:clickable="true"
+        android:background="@android:color/transparent"
+        />
 
 </RelativeLayout>

@@ -22,11 +22,13 @@ public class JSectionSearcher extends LinearLayout {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View layout = (inflater.inflate(R.layout.j_section_searcher, this));
 		mListView = (ListView) layout.findViewById(R.id.j_section_searcher_list);
+		mSideBar = (JSectionSearcherSideBar) layout.findViewById(R.id.j_section_searcher_side);
 	}
 	
 	public void setAdapter(JSectionSearcherAdapter adapter) {
 		mAdapter = adapter;
 		mListView.setAdapter(mAdapter);
+		mSideBar.setListView(mListView);
 	}
 	
 }
