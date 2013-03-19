@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class JSectionSearcher extends LinearLayout {
 
@@ -29,6 +30,11 @@ public class JSectionSearcher extends LinearLayout {
 		mAdapter = adapter;
 		mListView.setAdapter(mAdapter);
 		mSideBar.setListView(mListView);
+		
+	}
+	
+	public void setOnItemClickListener(OnItemClickListener listener) {
+		mListView.setOnItemClickListener(listener);
 	}
 	
 }

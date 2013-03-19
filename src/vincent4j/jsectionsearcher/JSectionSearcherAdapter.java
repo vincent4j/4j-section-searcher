@@ -13,8 +13,6 @@ import android.widget.TextView;
 
 public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndexer {
 	
-	private static final String TAG = "JSectionSearcher";
-	
 	private Context mContext;
 	
 	/**
@@ -45,10 +43,6 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
     	"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
     	"U", "V", "W", "X", "Y", "Z"
     };
-    
-    public JSectionSearcherItemEntity getItemSelected() {
-    	return null;
-    }
     
     public JSectionSearcherAdapter(Context context, ArrayList<JSectionSearcherSectionEntity> data) {
     	this(context, LAYOUT_TYPE_DEFAULT, data);
@@ -164,8 +158,8 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 	}
 
 	@Override
-	public Object getItem(int position) {
-		return mItems.get(position);
+	public JSectionSearcherItemEntity getItem(int position) {
+		return mItems.get(position).item;
 	}
 
 	@Override
@@ -188,9 +182,9 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 			try {
 				bindViewDefault(view, position);
 			} catch (ClassCastException e) {
-				Log.e(TAG, "You must supply a resource ID for a TextView");
+				Log.e("SectionSearcher", "You must supply a resource ID for a TextView");
 	            throw new IllegalStateException(
-	            		TAG + " requires the resource ID to be a TextView", e);
+	            		"SectionSearcher" + " requires the resource ID to be a TextView", e);
 			}
 			
 			break;
@@ -222,7 +216,6 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 
 	@Override
 	public Object[] getSections() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -230,9 +223,11 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 	public int getPositionForSection(int section) {
 		if (section >= mIndexes.size()) {
 			return mIndexes.size() - 1;
+		} else if (section < 0) {
+			return 0;
+		} else {
+			return mIndexes.get(section).fromPosition;
 		}
-		
-		return mIndexes.get(section).fromPosition;
 	}
 
 	@Override

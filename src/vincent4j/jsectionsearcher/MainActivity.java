@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends Activity {
 	
@@ -21,6 +24,7 @@ public class MainActivity extends Activity {
 		initData();
 		mAdapter = new JSectionSearcherAdapter(this, mSectionEntity);
 		mSectionSearcher.setAdapter(mAdapter);
+		mSectionSearcher.setOnItemClickListener(new JOnItemClickListener());
 	}
 	
 	private void initData() {
@@ -28,7 +32,7 @@ public class MainActivity extends Activity {
 //		    	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
 //		    	"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 //		    	"U", "V", "W", "X", "Y", "Z",
-				 "A", "L", "O",  "S","X","z",
+				 "A", "B","G", "L", "O",  "S", "V","X","z",
 		    };
 		
 		 mSectionEntity = new ArrayList<JSectionSearcherSectionEntity>();
@@ -39,13 +43,23 @@ public class MainActivity extends Activity {
 			
 			ArrayList<JSectionSearcherItemEntity> items = new ArrayList<JSectionSearcherItemEntity>();
 			
-			for (int j = 0; j < 5; j++) {
+			for (int j = 0; j < 10; j++) {
 				JSectionSearcherItemEntity item = new JSectionSearcherItemEntity(index + "-" + j + "-content", index + "-" + j + "-value");
 				items.add(item);
 			}
 			
 			sectionEntity = new JSectionSearcherSectionEntity(index, items);
 			mSectionEntity.add(sectionEntity);
+		}
+		
+	}
+	
+	private class JOnItemClickListener implements OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			System.out.println(mAdapter.getItem(position).toString());
 		}
 		
 	}

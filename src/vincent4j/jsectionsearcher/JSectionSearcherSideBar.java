@@ -1,13 +1,11 @@
 package vincent4j.jsectionsearcher;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,9 +18,20 @@ public class JSectionSearcherSideBar extends View {
 	private ListView mListView;
 	private JSectionSearcherAdapter mAdapter;
 	private ArrayList<JSectionSearcherAdapter.IndexEntity> mIndexes;
-	private List<Rect> mRectList = new ArrayList<Rect>();
 	
+	/**
+	 * SideBar是否正处于按下的状态
+	 */
+	private boolean mIsTouching = false;
+	
+	/**
+	 * SideBar一般状态下的背景色（相对于按下状态）
+	 */
 	private int mColorUp;
+	
+	/**
+	 * SideBar被按下的背景色
+	 */
 	private int mColorDown;
 
 	public JSectionSearcherSideBar(Context context, AttributeSet attrs) {
@@ -53,13 +62,7 @@ public class JSectionSearcherSideBar extends View {
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
-		if (state==2) {
-			canvas.drawColor(mColorDown);
-		}else{
-			canvas.drawColor(mColorUp);
-		}
-		
-		
+		canvas.drawColor(mIsTouching ? mColorDown : mColorUp);
 		
 		super.onDraw(canvas);
 		
@@ -74,39 +77,25 @@ public class JSectionSearcherSideBar extends View {
 		paint.setTextAlign(Paint.Align.CENTER);
 		paint.setAntiAlias(true);
 		
-		
-		int top = 0;
-		int left = 0;
-		int right = 0;
-		int bottm = 0;
-		
 		for (int i = 0; i < mIndexes.size(); i++) {
 			JSectionSearcherAdapter.IndexEntity indexEntity = mIndexes.get(i);
 			canvas.drawText(indexEntity.index, getMeasuredWidth() / 2, cellHeight * (i + 1), paint);
-			
-			
 		}
 		
 		
 	}
 	
-	private int state = 1;
-	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			state =2;
-//			JSectionSearcherSideBar.this.setBackgroundColor(mColorDown);
+			mIsTouching = true;
 			invalidate();
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
-			state =3;
+			mIsTouching = false;
 			invalidate();
-//			JSectionSearcherSideBar.this.setBackgroundColor(mColorUp);
 		}
 		
 		int index = (int) (event.getY() / (getMeasuredHeight() / mIndexes.size()));
-		
-		System.out.println("dfds " + index);
 		
 		int position = mAdapter.getPositionForSection(index);
 		

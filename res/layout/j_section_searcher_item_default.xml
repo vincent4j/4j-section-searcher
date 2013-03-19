@@ -9,18 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:layout_gravity="center_vertical"
+        android:background="@android:color/darker_gray"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
-        android:visibility="gone"
-        android:background="@android:color/darker_gray" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/j_section_searcher_item_default_1"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:paddingLeft="16dp"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
-        />
+        android:paddingLeft="16dp" />
 
 </LinearLayout>
