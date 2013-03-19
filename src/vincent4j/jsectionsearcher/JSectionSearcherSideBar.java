@@ -91,13 +91,19 @@ public class JSectionSearcherSideBar extends View {
 		paint.setAntiAlias(true);
 		
 <<<<<<< HEAD
+<<<<<<< HEAD
 		canvas.drawText("?", getMeasuredWidth() / 2, cellHeight, paint);
 =======
+=======
+>>>>>>> parent of d978c8f... bug fixed: 1.sidebar上下滑动背景色异常；2.sidebar快速滑动crash。
 		
 		int top = 0;
 		int left = 0;
 		int right = 0;
 		int bottm = 0;
+<<<<<<< HEAD
+>>>>>>> parent of d978c8f... bug fixed: 1.sidebar上下滑动背景色异常；2.sidebar快速滑动crash。
+=======
 >>>>>>> parent of d978c8f... bug fixed: 1.sidebar上下滑动背景色异常；2.sidebar快速滑动crash。
 		
 		for (int i = 0; i < mIndexes.size(); i++) {

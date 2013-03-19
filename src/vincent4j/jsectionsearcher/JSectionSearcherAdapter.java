@@ -17,6 +17,8 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 	
 	private static final String TAG = "JSectionSearcher";
 	
+	private static final String TAG = "JSectionSearcher";
+	
 	private Context mContext;
 	
 	/**
