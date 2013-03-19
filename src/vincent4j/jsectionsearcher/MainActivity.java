@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
 //		    	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
 //		    	"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 //		    	"U", "V", "W", "X", "Y", "Z",
-				 "A", "B","G", "L", "O",  "S", "V","X","z",
+				 "A", "B","C", "D", "E",
 		    };
 		
 		 mSectionEntity = new ArrayList<JSectionSearcherSectionEntity>();
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
 			
 			ArrayList<JSectionSearcherItemEntity> items = new ArrayList<JSectionSearcherItemEntity>();
 			
-			for (int j = 0; j < 10; j++) {
+			for (int j = 0; j < 4; j++) {
 				JSectionSearcherItemEntity item = new JSectionSearcherItemEntity(index + "-" + j + "-content", index + "-" + j + "-value");
 				items.add(item);
 			}
@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			System.out.println("position: " + position);
 			System.out.println(mAdapter.getItem(position).toString());
 		}
 		

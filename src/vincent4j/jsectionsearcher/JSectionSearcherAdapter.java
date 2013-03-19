@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndexer {
+public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndexer, Filterable {
 	
 	private Context mContext;
 	
@@ -23,6 +25,8 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 	
 	private ArrayList<ItemEntity> mItems;
 	private ArrayList<IndexEntity> mIndexes;
+	
+	private ItemsFilter mFilter;
 	
     /**
      * Item的布局类型，实例化时传入
@@ -39,7 +43,7 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
      * 右边快速检索栏的索引
      */
     private final static String [] INDEXES_CONTAINER = {
-    	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
+    	"", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
     	"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
     	"U", "V", "W", "X", "Y", "Z"
     };
@@ -108,11 +112,15 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 			indexEntity.toPosition = itemPosition + sectionItemsSize -1;
 			itemPosition = indexEntity.toPosition + 1;
 			
+			System.out.println("indexEntity " + indexEntity);
+			
 			for (int j = 0; j < sectionItemsSize; j++) {
 				ItemEntity itemEntity = new ItemEntity();
 				itemEntity.index = indexEntity;
 				itemEntity.item = sectionItems.get(j);
 				mItems.add(itemEntity);
+				
+				System.out.println("itemEntity " + itemEntity);
 			}
 			
 			indexIndex++;
@@ -258,6 +266,97 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 		@Override
 		public String toString() {
 			return "ItemEntity [index=" + index + ", item=" + item + "]";
+		}
+		
+	}
+
+	@Override
+	public Filter getFilter() {
+		return ((mFilter == null) ? new ItemsFilter() : mFilter);
+	}
+	
+	/**
+	 * 判断某条ListItem数据是否在检索范围之内。
+	 * @param item 
+	 * @param keyword 检索关键字
+	 * @return
+	 */
+	private boolean isContainKeyword(JSectionSearcherItemEntity item, String keyword) {
+		if ((keyword == null) || (keyword.length() < 1)) {
+			return true;
+		}
+		
+		if (item == null) {
+			return false;
+		}
+		
+		boolean ret = true;
+		
+		switch (mLayoutType) {
+		case LAYOUT_TYPE_DEFAULT:
+			String contentDefault = item.getContent();
+			
+			if (contentDefault == null) {
+				ret = false;
+				break;
+			}
+			
+			ret = contentDefault.contains(keyword);
+			break;
+
+		default:
+			break;
+		}
+		
+		return ret;
+		
+	}
+	
+	private class ItemsFilter extends Filter {
+
+		@Override
+		protected FilterResults performFiltering(CharSequence constraint) {
+			FilterResults ret = new FilterResults();
+			
+			if ((constraint == null) 
+					|| (constraint.toString().trim().length() < 1)) {
+				ret.values = mOriginalData;
+				return ret;
+			}
+			
+			String keyword = constraint.toString().trim();
+			
+			ArrayList<JSectionSearcherSectionEntity> sections = new ArrayList<JSectionSearcherSectionEntity>();
+			
+			for (int i = 0; i < mOriginalData.size(); i++) {
+				ArrayList<JSectionSearcherItemEntity> items = new ArrayList<JSectionSearcherItemEntity>();
+				
+				for (int j = 0; j < mOriginalData.get(i).getItems().size(); j++) {
+					if (isContainKeyword(mOriginalData.get(i).getItems().get(j), keyword)) {
+						items.add(mOriginalData.get(i).getItems().get(j));
+					}
+				}
+				
+				if (items.size() < 1) {
+					continue;
+				} else {
+					sections.add(new JSectionSearcherSectionEntity(mOriginalData.get(i).getIndex(), items));
+				}
+			}
+			
+			ret.values = sections;
+			return ret;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void publishResults(CharSequence constraint,
+				FilterResults results) {
+			mItems.clear();
+			mIndexes.clear();
+			
+			initData((ArrayList<JSectionSearcherSectionEntity>) results.values);
+			JSectionSearcherAdapter.this.notifyDataSetChanged();
 		}
 		
 	}

@@ -4,12 +4,16 @@ import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.HeaderViewListAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 @SuppressLint("DrawAllocation")
@@ -33,11 +37,14 @@ public class JSectionSearcherSideBar extends View {
 	 * SideBar被按下的背景色
 	 */
 	private int mColorDown;
+	
+	private Bitmap mSearchIcon;
 
 	public JSectionSearcherSideBar(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mColorUp = getResources().getColor(android.R.color.transparent);
 		mColorDown = getResources().getColor(android.R.color.darker_gray);
+		mSearchIcon = BitmapFactory.decodeResource(getResources(), R.drawable.j_section_searcher_search_item);
 	}
 	
 	public void setListView(ListView listview) {
@@ -48,7 +55,16 @@ public class JSectionSearcherSideBar extends View {
 		mListView = listview;
 		
 		try {
-			mAdapter = (JSectionSearcherAdapter) mListView.getAdapter();
+			ListAdapter adapter = mListView.getAdapter();
+			
+			if (adapter instanceof JSectionSearcherAdapter) {
+				// Header not existed in ListView.
+				mAdapter = (JSectionSearcherAdapter) adapter;
+			} else if (adapter instanceof HeaderViewListAdapter) {
+				// Header existed in ListView.
+				mAdapter = (JSectionSearcherAdapter) (((HeaderViewListAdapter) adapter).getWrappedAdapter());
+			}
+			
 			mIndexes = mAdapter.getIndexes();
 		} catch (ClassCastException e) {
 			mListView = null;
@@ -70,12 +86,14 @@ public class JSectionSearcherSideBar extends View {
 			return;
 		}
 		
-		int cellHeight = getMeasuredHeight() / mIndexes.size();
+		int cellHeight = getMeasuredHeight() / (mIndexes.size() + 1);
 		
 		Paint paint = new Paint();
 		paint.setTextSize((int) (cellHeight * 0.75));
 		paint.setTextAlign(Paint.Align.CENTER);
 		paint.setAntiAlias(true);
+		
+		canvas.drawText("?", getMeasuredWidth() / 2, cellHeight, paint);
 		
 		for (int i = 0; i < mIndexes.size(); i++) {
 			JSectionSearcherAdapter.IndexEntity indexEntity = mIndexes.get(i);
