@@ -1,6 +1,7 @@
 package vincent4j.jsectionsearcher;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -22,20 +24,9 @@ public class JSectionSearcherSideBar extends View {
 	private ListView mListView;
 	private JSectionSearcherAdapter mAdapter;
 	private ArrayList<JSectionSearcherAdapter.IndexEntity> mIndexes;
+	private List<Rect> mRectList = new ArrayList<Rect>();
 	
-	/**
-	 * SideBarÊÇ·ñÕý´¦ÓÚ°´ÏÂµÄ×´Ì¬
-	 */
-	private boolean mIsTouching = false;
-	
-	/**
-	 * SideBarÒ»°ã×´Ì¬ÏÂµÄ±³¾°É«£¨Ïà¶ÔÓÚ°´ÏÂ×´Ì¬£©
-	 */
 	private int mColorUp;
-	
-	/**
-	 * SideBar±»°´ÏÂµÄ±³¾°É«
-	 */
 	private int mColorDown;
 	
 	private Bitmap mSearchIcon;
@@ -78,7 +69,13 @@ public class JSectionSearcherSideBar extends View {
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
-		canvas.drawColor(mIsTouching ? mColorDown : mColorUp);
+		if (state==2) {
+			canvas.drawColor(mColorDown);
+		}else{
+			canvas.drawColor(mColorUp);
+		}
+		
+		
 		
 		super.onDraw(canvas);
 		
@@ -93,27 +90,43 @@ public class JSectionSearcherSideBar extends View {
 		paint.setTextAlign(Paint.Align.CENTER);
 		paint.setAntiAlias(true);
 		
+<<<<<<< HEAD
 		canvas.drawText("?", getMeasuredWidth() / 2, cellHeight, paint);
+=======
+		
+		int top = 0;
+		int left = 0;
+		int right = 0;
+		int bottm = 0;
+>>>>>>> parent of d978c8f... bug fixed: 1.sidebarä¸Šä¸‹æ»‘åŠ¨èƒŒæ™¯è‰²å¼‚å¸¸ï¼›2.sidebarå¿«é€Ÿæ»‘åŠ¨crashã€‚
 		
 		for (int i = 0; i < mIndexes.size(); i++) {
 			JSectionSearcherAdapter.IndexEntity indexEntity = mIndexes.get(i);
 			canvas.drawText(indexEntity.index, getMeasuredWidth() / 2, cellHeight * (i + 1), paint);
+			
+			
 		}
 		
 		
 	}
 	
+	private int state = 1;
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			mIsTouching = true;
+			state =2;
+//			JSectionSearcherSideBar.this.setBackgroundColor(mColorDown);
 			invalidate();
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
-			mIsTouching = false;
+			state =3;
 			invalidate();
+//			JSectionSearcherSideBar.this.setBackgroundColor(mColorUp);
 		}
 		
 		int index = (int) (event.getY() / (getMeasuredHeight() / mIndexes.size()));
+		
+		System.out.println("dfds " + index);
 		
 		int position = mAdapter.getPositionForSection(index);
 		

@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class JSectionSearcher extends LinearLayout {
 
@@ -40,10 +39,13 @@ public class JSectionSearcher extends LinearLayout {
 		mAdapter = adapter;
 		mListView.setAdapter(mAdapter);
 		mSideBar.setListView(mListView);
+<<<<<<< HEAD
 	}
 	
 	public void setOnItemClickListener(OnItemClickListener listener) {
 		mListView.setOnItemClickListener(listener);
+=======
+>>>>>>> parent of d978c8f... bug fixed: 1.sidebar上下滑动背景色异常；2.sidebar快速滑动crash。
 	}
 	
 	private class KeywordTextWatcher implements TextWatcher {

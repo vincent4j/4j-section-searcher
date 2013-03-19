@@ -4,9 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends Activity {
 	
@@ -24,7 +21,6 @@ public class MainActivity extends Activity {
 		initData();
 		mAdapter = new JSectionSearcherAdapter(this, mSectionEntity);
 		mSectionSearcher.setAdapter(mAdapter);
-		mSectionSearcher.setOnItemClickListener(new JOnItemClickListener());
 	}
 	
 	private void initData() {
@@ -32,7 +28,11 @@ public class MainActivity extends Activity {
 //		    	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
 //		    	"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 //		    	"U", "V", "W", "X", "Y", "Z",
+<<<<<<< HEAD
 				 "A", "B","C", "D", "E",
+=======
+				 "A", "L", "O",  "S","X","z",
+>>>>>>> parent of d978c8f... bug fixed: 1.sidebar上下滑动背景色异常；2.sidebar快速滑动crash。
 		    };
 		
 		 mSectionEntity = new ArrayList<JSectionSearcherSectionEntity>();
@@ -43,7 +43,11 @@ public class MainActivity extends Activity {
 			
 			ArrayList<JSectionSearcherItemEntity> items = new ArrayList<JSectionSearcherItemEntity>();
 			
+<<<<<<< HEAD
 			for (int j = 0; j < 4; j++) {
+=======
+			for (int j = 0; j < 5; j++) {
+>>>>>>> parent of d978c8f... bug fixed: 1.sidebar上下滑动背景色异常；2.sidebar快速滑动crash。
 				JSectionSearcherItemEntity item = new JSectionSearcherItemEntity(index + "-" + j + "-content", index + "-" + j + "-value");
 				items.add(item);
 			}
@@ -53,6 +57,7 @@ public class MainActivity extends Activity {
 		}
 		
 	}
+<<<<<<< HEAD
 	
 	private class JOnItemClickListener implements OnItemClickListener {
 
@@ -64,6 +69,8 @@ public class MainActivity extends Activity {
 		}
 		
 	}
+=======
+>>>>>>> parent of d978c8f... bug fixed: 1.sidebar上下滑动背景色异常；2.sidebar快速滑动crash。
 
 
 }
