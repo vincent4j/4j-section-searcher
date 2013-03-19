@@ -205,6 +205,8 @@ public class JSectionSearcherAdapter extends BaseAdapter implements SectionIndex
 		if (isSectionVisibility(position)) {
 			sectionView.setVisibility(View.VISIBLE);
 			sectionView.setText(mItems.get(position).index.index);
+		} else {
+			sectionView.setVisibility(View.GONE);
 		}
 		
 		((TextView) view.findViewById(R.id.j_section_searcher_item_default_1)).setText(mItems.get(position).item.getContent());
